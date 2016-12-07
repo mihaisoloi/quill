@@ -83,6 +83,12 @@ class SqlIdiomNamingSpec extends Spec {
         db.run(query[SomeEntity].filter(t => t.optionValue.isEmpty)).string mustEqual
           "SELECT t.option_value FROM some_entity t WHERE t.option_value IS NULL"
       }
+      "property empty comparison" in {
+        case class SomeEntity(optionValue: Option[Int])
+        val testValue: Option[Int] = None
+        db.run(query[SomeEntity].filter(t => t.optionValue == lift(testValue)).dynamic).string mustEqual
+          "SELECT t.option_value FROM some_entity t WHERE t.option_value IS NULL"
+      }
     }
   }
 }

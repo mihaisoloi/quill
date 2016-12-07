@@ -157,6 +157,7 @@ trait SqlIdiom extends Idiom {
     case UnaryOperation(op, ast)                              => stmt"${op.token} (${ast.token})"
     case BinaryOperation(a, EqualityOperator.`==`, NullValue) => stmt"${scopedTokenizer(a)} IS NULL"
     case BinaryOperation(NullValue, EqualityOperator.`==`, b) => stmt"${scopedTokenizer(b)} IS NULL"
+    case BinaryOperation(a, EqualityOperator.`==`, l: Lift) if l.value == None => stmt"${scopedTokenizer(a)} IS NULL"
     case BinaryOperation(a, EqualityOperator.`!=`, NullValue) => stmt"${scopedTokenizer(a)} IS NOT NULL"
     case BinaryOperation(NullValue, EqualityOperator.`!=`, b) => stmt"${scopedTokenizer(b)} IS NOT NULL"
     case BinaryOperation(a, op @ SetOperator.`contains`, b)   => stmt"${scopedTokenizer(b)} ${op.token} (${a.token})"
